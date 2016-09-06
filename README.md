@@ -1,55 +1,30 @@
-## Introduction
-This is a Dockerfile to build a container image for nginx and php-fpm, with the ability to pull website code from git. The container can also use environment variables to configure your web application using the templating detailed in the special features section.
-### Git repository
-The source files for this project can be found here: [https://github.com/ngineered/nginx-php-fpm](https://github.com/ngineered/nginx-php-fpm)
+## Original
+[https://github.com/ngineered/nginx-php-fpm](https://github.com/ngineered/nginx-php-fpm)
+[https://registry.hub.docker.com/u/richarvey/nginx-php-fpm/](https://registry.hub.docker.com/u/richarvey/nginx-php-fpm/)
 
-If you have any improvements please submit a pull request.
-### Docker hub repository
-The Docker hub build can be found here: [https://registry.hub.docker.com/u/richarvey/nginx-php-fpm/](https://registry.hub.docker.com/u/richarvey/nginx-php-fpm/)
 ## Versions
 - Nginx Mainline Version: **1.9.11**
-- PHP: **5.6**
+- PHP: **7.0**
 - Ubuntu Trusty: **16.04**
 
 ## Building from source
 To build from source you need to clone the git repo and run docker build:
 ```
-git clone https://github.com/ngineered/nginx-php-fpm.git
-docker build -t richarvey/nginx-php-fpm:latest .
-```
-
-## Pulling from Docker Hub
-Pull the image from docker hub rather than downloading the git repo. This prevents you having to build the image on every docker host:
-```
-docker pull richarvey/nginx-php-fpm:latest
+git clone https://github.com/notegame/docker-php7-nginx-oci8-mongo.git
+docker build -t richarvey/nginx-php7-fpm-oci8-mongo:latest .
 ```
 
 ## Running
 To simply run the container:
 ```
-sudo docker run --name nginx -p 8080:80 -d richarvey/nginx-php-fpm
+sudo docker run -d --name nginx -p 8080:80 richarvey/nginx-php7-fpm-oci8-mongo
 ```
 
 You can then browse to ```http://<DOCKER_HOST>:8080``` to view the default install files.
 ### Volumes
 If you want to link to your web site directory on the docker host to the container run:
 ```
-sudo docker run --name nginx -p 8080:80 -v /your_code_directory:/usr/share/nginx/html -d richarvey/nginx-php-fpm
-```
-
-### Dynamically Pulling code from git
-One of the nice features of this container is its ability to pull code from a git repository with a couple of environmental variables passed at run time.
-
-**Note:** You need to have your SSH key that you use with git to enable the deployment. I recommend using a special deploy key per project to minimise the risk.
-
-To run the container and pull code simply specify the GIT_REPO URL including *git@* and then make sure you have a folder on the docker host with your id_rsa key stored in it:
-```
-sudo docker run -e 'GIT_REPO=git@git.ngd.io:ngineered/ngineered-website.git'  -v /opt/ngddeploy/:/root/.ssh -p 8080:80 -d richarvey/nginx-php-fpm
-```
-
-To pull a repository and specify a branch add the GIT_BRANCH environment variable:
-```
-sudo docker run -e 'GIT_REPO=git@git.ngd.io:ngineered/ngineered-website.git' -e 'GIT_BRANCH=stage' -v /opt/ngddeploy/:/root/.ssh -p 8080:80 -d richarvey/nginx-php-fpm
+sudo docker run -d --name nginx -p 8080:80 -v /your_code_directory:/var/www richarvey/nginx-php7-fpm-oci8-mongo
 ```
 
 ### Linking
